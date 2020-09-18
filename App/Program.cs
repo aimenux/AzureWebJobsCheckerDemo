@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Lib.Configuration;
+using Lib.Extensions;
 using Lib.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,15 +17,17 @@ namespace App
         public static async Task Main(string[] args)
         {
             using var host = CreateHostBuilder(args).Build();
-
-            var logger = host.Services.GetService<ILogger>();
             var settings = host.Services.GetService<IOptions<Settings>>().Value;
             var webjobInfoProvider = host.Services.GetService<IWebJobInfoProvider>();
-            var webjobStatus = await webjobInfoProvider.GetWebJobStatusAsync(settings);
 
-            logger.LogInformation("Webjob '{name}' has status '{status}'", settings.Name, webjobStatus);
+            foreach (var webjob in settings.WebJobs)
+            {
+                ConsoleColor.Yellow.WriteLine($"Checking infos for webjob '{webjob}'");
+                var webjobInfo = await webjobInfoProvider.GetWebJobInfoAsync(webjob);
+                ConsoleColor.Green.WriteLine(webjobInfo);
+            }
 
-            Console.WriteLine("Press any key to exit !");
+            ConsoleColor.Gray.WriteLine("Press any key to exit !");
             Console.ReadKey();
         }
 
@@ -55,25 +56,16 @@ namespace App
                         options.DisableColors = false;
                         options.TimestampFormat = "[HH:mm:ss:fff] ";
                     });
+                    builder.AddFilter("System.Net.Http", LogLevel.Warning);
+                    builder.AddFilter("Microsoft.Extensions.Http", LogLevel.Warning);
                     builder.AddConfiguration(context.Configuration.GetSection("Logging"));
                 })
                 .ConfigureServices((context, services) =>
                 {
                     services.Configure<Settings>(context.Configuration.GetSection(nameof(Settings)));
-                    services.AddHttpClient<IWebJobInfoProvider, WebJobInfoProvider>((provider, client) =>
-                    {
-                        var settings = provider.GetService<IOptions<Settings>>().Value;
-                        client.BaseAddress = new Uri(settings.Url);
-                        client.DefaultRequestHeaders.Authorization = GetAuthenticationHeader(settings);
-                    });
+                    services.AddTransient<IWebJobInfoProvider, WebJobInfoProvider>();
+                    services.AddHttpClient();
                 });
-
-        private static AuthenticationHeaderValue GetAuthenticationHeader(Settings settings)
-        {
-            var bytes = Encoding.ASCII.GetBytes($"{settings.UserName}:{settings.Password}");
-            var base64 = Convert.ToBase64String(bytes);
-            return new AuthenticationHeaderValue("Basic", base64);
-        }
 
         private static void AddNonGenericLogger(this ILoggingBuilder loggingBuilder)
         {

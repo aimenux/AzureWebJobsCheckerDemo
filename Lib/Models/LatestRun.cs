@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using Lib.Extensions;
 using Newtonsoft.Json;
 
 namespace Lib.Models
@@ -37,5 +39,10 @@ namespace Lib.Models
 
         [JsonProperty("trigger")]
         public string Trigger { get; set; }
+
+        public override string ToString()
+        {
+            return this.Dump();
+        }
     }
 }

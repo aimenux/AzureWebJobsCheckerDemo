@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using Lib.Extensions;
 using Newtonsoft.Json;
 
 namespace Lib.Models
@@ -47,42 +46,7 @@ namespace Lib.Models
 
         public override string ToString()
         {
-            var summary = new StringBuilder();
-            summary.AppendLine($"Name: {Name}");
-            var type = GetWebJobType();
-            summary.AppendLine($"Type: {type}");
-            summary.AppendLine($"Error: {Error}");
-            switch (type)
-            {
-                case WebJobType.Triggered:
-                    summary.AppendLine($"Status: {LatestRun.Status}");
-                    summary.AppendLine($"StartTime: {LatestRun.StartTime}");
-                    summary.AppendLine($"EndTime: {LatestRun.EndTime}");
-                    summary.AppendLine($"Duration: {LatestRun.Duration}");
-                    summary.AppendLine($"WebJobLogUrl: {LatestRun.OutputUrl}");
-                    break;
-
-                case WebJobType.Continuous:
-                    summary.AppendLine($"Status: {Status}");
-                    summary.AppendLine($"WebJobLogUrl: {LogUrl}");
-                    break;
-
-                default:
-                    summary.AppendLine($"UnexpectedType: {Type}");
-                    break;
-            }
-            summary.AppendLine($"WebJobUrl: {Url}");
-            return summary.ToString();
-        }
-
-        private WebJobType GetWebJobType()
-        {
-            if (Enum.TryParse(Type, out WebJobType webJobType))
-            {
-                return webJobType;
-            }
-
-            throw new ArgumentOutOfRangeException(Type, "Unexpected webJobType");
+            return this.Dump();
         }
     }
 }
