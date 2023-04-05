@@ -1,4 +1,5 @@
-![.NET Core](https://github.com/aimenux/WebJobsCheckerDemo/workflows/.NET%20Core/badge.svg)
+[![.NET](https://github.com/aimenux/WebJobsCheckerDemo/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/aimenux/WebJobsCheckerDemo/actions/workflows/ci.yml)
+
 # WebJobsCheckerDemo
 ```
 Demo for using kudu webjobs rest api
@@ -6,4 +7,4 @@ Demo for using kudu webjobs rest api
 
 > In this demo, i m querying [kudu webjobs rest api](https://github.com/projectkudu/kudu/wiki/WebJobs-API) in order to collect information about webjobs.
 
-**`Tools`** : vs19, net core 3.1
+**`Tools`** : vs22, net 6.0
