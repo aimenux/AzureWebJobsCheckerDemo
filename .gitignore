@@ -349,3 +349,4 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /App/appsettings.dev.json
+/.idea/.idea.WebJobsCheckerDemo/.idea
