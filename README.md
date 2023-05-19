@@ -1,6 +1,6 @@
 [![.NET](https://github.com/aimenux/WebJobsCheckerDemo/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/aimenux/WebJobsCheckerDemo/actions/workflows/ci.yml)
 
-# WebJobsCheckerDemo
+# AzureWebJobsCheckerDemo
 ```
 Demo for using kudu webjobs rest api
 ```
